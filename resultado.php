@@ -14,6 +14,7 @@ if (!isset($_SESSION['participante_id'])) {
 
 $conn = getConnection();
 $participante_id = $_SESSION['participante_id'];
+$total_questoes = getTotalQuestoes();
 
 // Buscar dados do participante
 $stmt = $conn->prepare("SELECT * FROM participantes WHERE id = ?");
@@ -108,9 +109,9 @@ function formatarTempo($segundos) {
                 <div class="score-display">
                     <div class="score-circle">
                         <span class="score-number"><?php echo $participante['pontuacao']; ?></span>
-                        <span class="score-total">/ 20</span>
+                        <span class="score-total">/ <?php echo $total_questoes; ?></span>
                     </div>
-                    <p class="score-percentage"><?php echo round(($participante['pontuacao'] / 20) * 100); ?>% de acertos</p>
+                    <p class="score-percentage"><?php echo round(($participante['pontuacao'] / $total_questoes) * 100); ?>% de acertos</p>
                     <p class="score-time">⏱️ Tempo: <strong><?php echo formatarTempo($participante['tempo_segundos']); ?></strong></p>
                 </div>
             </div>
@@ -149,8 +150,8 @@ function formatarTempo($segundos) {
                                     ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($rank['nome_completo']); ?></td>
-                                <td class="score"><?php echo $rank['pontuacao']; ?>/20</td>
-                                <td class="time">⏱️ <?php echo formatarTempo($rank['tempo_segundos']); ?></td>
+                                <td class="score"><?php echo $rank['pontuacao']; ?>/<?php echo $total_questoes; ?></td>
+                                <td class="time"><?php echo formatarTempo($rank['tempo_segundos']); ?></td>
                                 <td class="date"><?php echo date('d/m/Y H:i:s', strtotime($rank['data_realizacao'])); ?></td>
                             </tr>
                         <?php 

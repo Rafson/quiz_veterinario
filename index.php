@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Buscar ranking para exibir na página inicial
 $conn = getConnection();
+$total_questoes = getTotalQuestoes();
 $sql_ranking = "SELECT nome_completo, pontuacao, tempo_segundos, data_realizacao FROM participantes ORDER BY pontuacao DESC, tempo_segundos ASC LIMIT 10";
 $ranking = $conn->query($sql_ranking);
 
@@ -52,6 +53,14 @@ function formatarTempo($segundos) {
         return sprintf('%02d:%02d:%02d', $horas, $minutos, $segs);
     }
     return sprintf('%02d:%02d', $minutos, $segs);
+}
+
+// Obter URL atual dinamicamente
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'];
+$current_url = $protocol . '://' . $host . dirname($_SERVER['PHP_SELF']);
+if (substr($current_url, -1) !== '/') {
+    $current_url .= '/';
 }
 ?>
 <!DOCTYPE html>
@@ -71,6 +80,14 @@ function formatarTempo($segundos) {
             
             <h1>🐾 Quiz de Veterinária</h1>
             <p class="subtitle">Teste seus conhecimentos com 25 perguntas sobre neurologia veterinária!</p>
+            
+            <!-- QR Code -->
+            <div class="qrcode-container">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?php echo urlencode($current_url); ?>" 
+                     alt="QR Code" 
+                     class="qrcode">
+                <p class="qrcode-text">Escaneie para acessar o quiz</p>
+            </div>
             
             <?php if (isset($erro)): ?>
                 <div class="error-message"><?php echo htmlspecialchars($erro); ?></div>
@@ -145,8 +162,8 @@ function formatarTempo($segundos) {
                                     ?>
                                 </td>
                                 <td><?php echo htmlspecialchars($rank['nome_completo']); ?></td>
-                                <td class="score"><?php echo $rank['pontuacao']; ?>/20</td>
-                                <td class="time">⏱️ <?php echo formatarTempo($rank['tempo_segundos']); ?></td>
+                                <td class="score"><?php echo $rank['pontuacao']; ?>/<?php echo $total_questoes; ?></td>
+                                <td class="time"><?php echo formatarTempo($rank['tempo_segundos']); ?></td>
                                 <td class="date"><?php echo date('d/m/Y H:i:s', strtotime($rank['data_realizacao'])); ?></td>
                             </tr>
                         <?php 

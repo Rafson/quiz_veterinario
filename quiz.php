@@ -80,7 +80,7 @@ $conn->close();
 <body>
     <div class="container">
         <div class="logo-container">
-            <img src="images/logo.png" alt="Logo" class="logo">
+            <img src="images/logo.png" alt="Logo" class="logo" id="logo-quiz">
         </div>
         <div class="quiz-header">
             <h1>🐾 Quiz Veterinário</h1>
@@ -200,6 +200,36 @@ $conn->close();
                 }
             }
         });
+        
+        // Easter egg: 4 cliques no logo reinicia o quiz
+        let clickCount = 0;
+        let clickTimer = null;
+        const logo = document.getElementById('logo-quiz');
+        
+        if (logo) {
+            logo.style.cursor = 'pointer';
+            logo.addEventListener('click', function() {
+                clickCount++;
+                
+                // Reset contador após 2 segundos sem clicar
+                clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => {
+                    clickCount = 0;
+                }, 2000);
+                
+                // Ao 4º clique, reiniciar
+                if (clickCount === 4) {
+                    clearInterval(timerInterval);
+                    sessionStorage.removeItem('quiz_start_time');
+                    if (confirm('Deseja realmente reiniciar o quiz e voltar ao início?')) {
+                        window.location.href = 'index.php?restart=1';
+                    } else {
+                        clickCount = 0;
+                        timerInterval = setInterval(updateTimer, 1000);
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>

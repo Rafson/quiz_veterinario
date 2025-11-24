@@ -23,6 +23,18 @@ function getConnection() {
     return $conn;
 }
 
+// Função para obter total de questões
+function getTotalQuestoes() {
+    static $total = null;
+    if ($total === null) {
+        $conn = getConnection();
+        $result = $conn->query("SELECT COUNT(*) as total FROM questoes");
+        $row = $result->fetch_assoc();
+        $total = (int)$row['total'];
+    }
+    return $total;
+}
+
 // Iniciar sessão
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

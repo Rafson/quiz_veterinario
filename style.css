@@ -23,6 +23,31 @@ body {
     height: auto;
 }
 
+/* ===== QR CODE ===== */
+.qrcode-container {
+    text-align: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.qrcode {
+    max-width: 200px;
+    height: auto;
+    border: 3px solid #667eea;
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+}
+
+.qrcode-text {
+    margin-top: 10px;
+    color: #667eea;
+    font-weight: 600;
+    font-size: 0.9em;
+}
+
 /* ===== INFORMAÇÕES DO CURSO ===== */
 .course-info {
     background: #f8f9fa;

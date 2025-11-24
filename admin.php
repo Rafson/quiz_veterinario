@@ -39,6 +39,7 @@ if (isset($_GET['logout'])) {
 // Processar ações administrativas
 if ($logged_in) {
     $conn = getConnection();
+    $total_questoes = getTotalQuestoes();
     
     // Apagar todos os registros
     if (isset($_POST['limpar_ranking'])) {
@@ -80,7 +81,7 @@ if ($logged_in) {
             fputcsv($output, [
                 $row['id'],
                 $row['nome_completo'],
-                $row['pontuacao'] . '/20',
+                $row['pontuacao'] . '/' . getTotalQuestoes(),
                 $row['tempo_segundos'],
                 $tempo_formatado,
                 date('d/m/Y H:i:s', strtotime($row['data_realizacao']))
@@ -343,11 +344,11 @@ function formatarTempo($segundos) {
                 </div>
                 <div class="stat-card">
                     <h3>🏆 Melhor Pontuação</h3>
-                    <div class="value"><?php echo $stats['melhor_pontuacao']; ?>/20</div>
+                    <div class="value"><?php echo $stats['melhor_pontuacao']; ?>/<?php echo $total_questoes; ?></div>
                 </div>
                 <div class="stat-card">
                     <h3>📉 Menor Pontuação</h3>
-                    <div class="value"><?php echo $stats['pior_pontuacao']; ?>/20</div>
+                    <div class="value"><?php echo $stats['pior_pontuacao']; ?>/<?php echo $total_questoes; ?></div>
                 </div>
             </div>
             
@@ -401,8 +402,8 @@ function formatarTempo($segundos) {
                                         ?>
                                     </td>
                                     <td><?php echo htmlspecialchars($rank['nome_completo']); ?></td>
-                                    <td class="score"><?php echo $rank['pontuacao']; ?>/20</td>
-                                    <td class="time">⏱️ <?php echo formatarTempo($rank['tempo_segundos']); ?></td>
+                                    <td class="score"><?php echo $rank['pontuacao']; ?>/<?php echo $total_questoes; ?></td>
+                                    <td class="time"><?php echo formatarTempo($rank['tempo_segundos']); ?></td>
                                     <td class="date"><?php echo date('d/m/Y H:i:s', strtotime($rank['data_realizacao'])); ?></td>
                                 </tr>
                             <?php 
